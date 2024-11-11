@@ -1,6 +1,8 @@
 # Changelog
 
 
+## v1.0.1
+
 ## v2.0.12
 
 [compare changes](https://github.com/gyxoBka/nuxt-breakpoints-media/compare/v2.0.11...v2.0.12)
