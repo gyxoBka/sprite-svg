@@ -1,4 +1,4 @@
-import type { Config, PluginConfig } from 'svgo'
+import type { Config } from 'svgo'
 import { optimize } from 'svgo'
 
 export interface SVG {

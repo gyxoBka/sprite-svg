@@ -127,7 +127,7 @@ const fn: Plugin<InlineDefPluginOptions> = (root, params) => {
               },
               children: [referenced],
             }
-            // @ts-ignore
+            // @ts-expect-error hacky extract JSAPI class to avoid imports from other module
             replacement = new JSAPI(g)
           }
           useParentNode.children = useParentNode.children.map((child) => {
