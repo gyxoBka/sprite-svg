@@ -1,5 +1,6 @@
 <template>
   <div>
+    <SvgIcon name="arrow" />
   </div>
 </template>
 

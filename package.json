@@ -2,7 +2,7 @@
   "name": "nuxt-sprite-svg",
   "version": "1.0.0",
   "description": "Optimized and Easy way to use SVG files in Nuxt",
-  "repository": "",
+  "repository": "https://github.com/gyxoBka/sprite-svg",
   "author": {
     "name": "gyxoBka"
   },
@@ -38,7 +38,8 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.12.2"
+    "@nuxt/kit": "^3.12.2",
+    "svgo": "^3.3.2"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.3.3",
