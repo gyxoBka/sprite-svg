@@ -5,6 +5,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from '#imports'
 import { path, spriteClass, defaultSprite } from '#svg-sprite'
 
 const props = defineProps<{ name: string }>()
