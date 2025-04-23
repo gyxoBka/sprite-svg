@@ -13,7 +13,7 @@ export function useSvgFile(file: string, { defaultSprite = 'icons' } = {}) {
     file = file.substring(4)
   }
   const paths = file.split(':')
-  const name = paths.pop()!.replace(/\.svg$/, '').toLocaleLowerCase().replace(/[^a-z0-9-:]/g, '-')
+  const name = paths.pop()!.replace(/\.svg$/, '').toLocaleLowerCase().replace(/[^a-z0-9-_:]/g, '-')
   const sprite = paths.join('-')
   return {
     name,
