@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import type { Config } from 'svgo'
 import { optimize } from 'svgo'
 
@@ -104,4 +105,11 @@ async function optimizeSVG(svg: SVG, optimizeOptions: Config = {}) {
     ...svg,
     content: $data.data,
   }
+}
+
+export function getHash(content: string): string {
+  return createHash('sha256') // можно 'md5' для короче
+    .update(content)
+    .digest('hex')
+    .slice(0, 16)
 }

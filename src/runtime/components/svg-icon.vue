@@ -6,15 +6,15 @@
 
 <script setup lang="ts">
 import { computed } from '#imports'
-import { path, spriteClass, defaultSprite } from '#svg-sprite'
+import { path, spriteClass, defaultSprite, spriteManifest } from '#svg-sprite'
 
 const props = defineProps<{ name: string }>()
 
 const icon = computed(() => {
   const [filename, icon] = props.name.split('/')
 
-  if (!icon) return { file: defaultSprite, name: filename }
+  if (!icon) return { file: spriteManifest[defaultSprite], name: filename }
 
-  return { file: filename, name: icon }
+  return { file: spriteManifest[filename], name: icon }
 })
 </script>
