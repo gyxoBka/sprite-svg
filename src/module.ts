@@ -1,4 +1,5 @@
 import fsp from 'node:fs/promises'
+import path from 'node:path'
 import {
   defineNuxtModule,
   createResolver,
@@ -8,7 +9,7 @@ import {
 } from '@nuxt/kit'
 import type { IModuleOptions } from './types'
 import inlineDefs from './svgo-plugins/inlineDefs'
-import { createSpritesManager, useSvgFile } from './utils'
+import { createSpritesManager, getHash, useSvgFile } from './utils'
 import { spritesTemplate } from './template'
 
 export type ModuleOptions = IModuleOptions
@@ -53,11 +54,14 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
   setup(options, nuxt) {
+    const manifest: Record<string, string> = {}
+
     const { resolve } = createResolver(import.meta.url)
 
     addComponent({ name: 'SvgIcon', filePath: resolve('./runtime/components/svg-icon.vue'), global: true })
 
     const { sprites, addSvg, removeSvg, generateSprite } = createSpritesManager(options.optimizeOptions)
+
     nuxt.options.alias['#svg-sprite'] = addTemplate({
       ...spritesTemplate,
       write: true,
@@ -65,6 +69,7 @@ export default defineNuxtModule<ModuleOptions>({
         publicPath: options.publicPath,
         elementClass: options.elementClass,
         defaultSprite: options.defaultSprite,
+        manifest,
       },
     }).dst
 
@@ -94,9 +99,26 @@ export default defineNuxtModule<ModuleOptions>({
       )
 
       const writeSprite = async (sprite: string) => {
-        await fsp.writeFile(`${nuxt.options.rootDir}/${output}/${sprite}.svg`, generateSprite(sprite))
-        // return nitro.storage.setItem(`${output}:${sprite}.svg`, generateSprite(sprite))
+        const spriteContent = generateSprite(sprite)
+        const fileName = nuxt.options.dev ? sprite : `${sprite}.${getHash(spriteContent)}`
+
+        const spriteDir = path.join(nuxt.options.rootDir, output)
+        const filePath = path.join(spriteDir, `${fileName}.svg`)
+
+        manifest[sprite] = fileName
+
+        await fsp.writeFile(filePath, spriteContent)
+
+        if (!nuxt.options.dev) {
+          const existingFiles = await fsp.readdir(spriteDir)
+          const outdated = existingFiles.filter(file =>
+            file.startsWith(`${sprite}.`) && file.endsWith('.svg') && file !== `${fileName}.svg`,
+          )
+
+          await Promise.all(outdated.map(file => fsp.unlink(path.join(spriteDir, file))))
+        }
       }
+
       await Promise.all(Object.keys(sprites).map(writeSprite))
 
       // Rest of the code is only for development
