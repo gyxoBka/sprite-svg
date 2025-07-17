@@ -10,7 +10,8 @@ import {
 import type { IModuleOptions } from './types'
 import inlineDefs from './svgo-plugins/inlineDefs'
 import { createSpritesManager, getHash, useSvgFile } from './utils'
-import { spritesTemplate } from './template'
+import { spritesTemplate } from './templates/sprites'
+import { typesTemplate } from './templates/types'
 
 export type ModuleOptions = IModuleOptions
 export default defineNuxtModule<ModuleOptions>({
@@ -70,6 +71,15 @@ export default defineNuxtModule<ModuleOptions>({
         elementClass: options.elementClass,
         defaultSprite: options.defaultSprite,
         manifest,
+      },
+    }).dst
+
+    nuxt.options.alias['#svg-sprite-types'] = addTemplate({
+      ...typesTemplate,
+      write: true,
+      options: {
+        sprites,
+        defaultSprite: options.defaultSprite,
       },
     }).dst
 

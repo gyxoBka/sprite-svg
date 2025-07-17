@@ -7,8 +7,9 @@
 <script setup lang="ts">
 import { computed } from '#imports'
 import { path, spriteClass, defaultSprite, spriteManifest } from '#svg-sprite'
+import type { SpriteIconName } from '#svg-sprite-types'
 
-const props = defineProps<{ name: string }>()
+const props = defineProps<{ name: SpriteIconName }>()
 
 const icon = computed(() => {
   const [filename, icon] = props.name.split('/')
