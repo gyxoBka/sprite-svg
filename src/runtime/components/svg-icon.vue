@@ -1,6 +1,6 @@
 <template>
   <svg :class="spriteClass">
-    <use :href="`${path}/${icon.file}.svg#${icon.name}`" />
+    <use :href="href" />
   </svg>
 </template>
 
@@ -12,10 +12,12 @@ import type { SpriteIconName } from '#svg-sprite-types'
 const props = defineProps<{ name: SpriteIconName }>()
 
 const icon = computed(() => {
-  const [filename, icon] = props.name.split('/')
+  const [filename, iconName] = props.name.split('/')
 
-  if (!icon) return { file: spriteManifest[defaultSprite], name: filename }
+  if (!iconName) return { file: spriteManifest[defaultSprite] ?? defaultSprite, name: filename }
 
-  return { file: spriteManifest[filename], name: icon }
+  return { file: spriteManifest[filename] ?? filename, name: iconName }
 })
+
+const href = computed(() => `${path}/${icon.value.file}.svg#${icon.value.name}`)
 </script>
