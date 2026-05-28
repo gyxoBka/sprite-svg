@@ -81,8 +81,8 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     input: '~/assets/sprite/svg',
-    output: '~/assets/sprite/gen',
-    publicPath: '/assets/sprite/gen',
+    output: '~~/public/assets/sprite',
+    publicPath: '/assets/sprite',
     defaultSprite: 'icons',
     elementClass: 'icon',
     optimizeOptions: {
