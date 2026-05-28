@@ -30,8 +30,9 @@ export function createSpritesManager(svgoOptions: Config = {}) {
       .then(extractDefs)
       .then(convertToSymbol)
 
-    sprites[svg.sprite] = (sprites[svg.sprite] || []).filter(s => s.name !== svg.name)
-    sprites[svg.sprite].push(svg)
+    const spriteSvgs = (sprites[svg.sprite] || []).filter(s => s.name !== svg.name)
+    spriteSvgs.push(svg)
+    sprites[svg.sprite] = spriteSvgs
   }
 
   const removeSvg = (sprite: string, name: string) => {

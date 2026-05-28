@@ -1,5 +1,4 @@
-import type { PluginConfig } from 'svgo'
-import type { XastParent, XastElement, Plugin } from 'svgo/lib/types'
+import type { PluginConfig, XastParent, XastElement, Plugin } from 'svgo'
 
 type VisitCallback = (element: XastElement, parentNode: XastParent) => void
 
@@ -23,7 +22,7 @@ const visitElements = (node: XastParent, fn: VisitCallback) => {
 const fn: Plugin<InlineDefPluginOptions> = (root, params) => {
   const { onlyUnique = true } = params
   // hacky extract JSAPI class to avoid imports from other modules
-  const JSAPI = root.constructor
+  const JSAPI = root.constructor as new (node: XastElement) => XastElement
 
   const uses = [] as [XastElement, XastParent][]
   const useCounts = new Map<string, number>()
@@ -34,6 +33,7 @@ const fn: Plugin<InlineDefPluginOptions> = (root, params) => {
     if (node.name === 'use') {
       uses.push([node, parentNode])
       const href = node.attributes['xlink:href'] || node.attributes.href
+      if (!href) return
       const count = useCounts.get(href) || 0
       useCounts.set(href, count + 1)
     }
@@ -81,6 +81,7 @@ const fn: Plugin<InlineDefPluginOptions> = (root, params) => {
       exit: () => {
         for (const [use, useParentNode] of uses) {
           const href = use.attributes['xlink:href'] || use.attributes.href
+          if (!href) continue
           const count = useCounts.get(href) || 0
           const referenced = referencedElements.get(href)
 
@@ -119,7 +120,7 @@ const fn: Plugin<InlineDefPluginOptions> = (root, params) => {
             /**
              * @type {XastElement}
              */
-            const g = {
+            const g: XastElement = {
               type: 'element',
               name: 'g',
               attributes: {
@@ -127,7 +128,6 @@ const fn: Plugin<InlineDefPluginOptions> = (root, params) => {
               },
               children: [referenced],
             }
-            // @ts-expect-error hacky extract JSAPI class to avoid imports from other module
             replacement = new JSAPI(g)
           }
           useParentNode.children = useParentNode.children.map((child) => {
