@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v2.0.1
+
+[compare changes](https://github.com/gyxoBka/sprite-svg/compare/v1.0.7...v2.0.1)
+
 ## v1.0.7
 
 [compare changes](https://github.com/gyxoBka/sprite-svg/compare/v1.0.6...v1.0.7)
