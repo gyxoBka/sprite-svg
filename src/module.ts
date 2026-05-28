@@ -10,7 +10,7 @@ import {
 import type { IModuleOptions } from './types'
 import inlineDefs from './svgo-plugins/inlineDefs'
 import { createSpritesManager, getHash, useSvgFile } from './utils'
-import { spritesTemplate } from './templates/sprites'
+import { spritesTemplate, spritesTypesTemplate } from './templates/sprites'
 import { typesTemplate } from './templates/types'
 
 function resolveNuxtStoragePath(input: string, nuxt: any): string {
@@ -91,7 +91,6 @@ export default defineNuxtModule<ModuleOptions>({
           name: 'preset-default',
           params: {
             overrides: {
-              removeViewBox: false,
               // Make all styles inline By definition, a defs sprite is not usable as a CSS sprite
               inlineStyles: {
                 onlyMatchedOnce: false,
@@ -133,6 +132,10 @@ export default defineNuxtModule<ModuleOptions>({
         manifest,
       },
     }).dst
+    addTemplate({
+      ...spritesTypesTemplate,
+      write: true,
+    })
 
     nuxt.options.alias['#svg-sprite-types'] = addTemplate({
       ...typesTemplate,
@@ -143,7 +146,7 @@ export default defineNuxtModule<ModuleOptions>({
       },
     }).dst
 
-    nuxt.hook('nitro:init', async (nitro) => {
+    ;(nuxt.hook as any)('nitro:init', async (nitro: any) => {
       const input = resolveNuxtStoragePath(options.input, nuxt)
       const inputDir = resolveNuxtFsPath(options.input, nuxt)
       const output = resolveNuxtFsPath(options.output, nuxt)
@@ -193,6 +196,7 @@ export default defineNuxtModule<ModuleOptions>({
       await updateTemplates({
         filter: template =>
           template.filename === 'sprite-svg.mjs'
+          || template.filename === 'sprite-svg.d.ts'
           || template.filename === 'types/svg-sprite.d.ts',
       })
 
@@ -227,7 +231,7 @@ export default defineNuxtModule<ModuleOptions>({
           filter: template => template.filename?.startsWith('svg-sprite'),
         })
       }
-      nitro.storage.watch((event, file) => handleFileChange(event, file))
+      nitro.storage.watch((event: string, file: string) => handleFileChange(event, file))
     })
   },
 })

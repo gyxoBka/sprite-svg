@@ -12,7 +12,7 @@ import type { SpriteIconName } from '#svg-sprite-types'
 const props = defineProps<{ name: SpriteIconName }>()
 
 const icon = computed(() => {
-  const [filename, iconName] = props.name.split('/')
+  const [filename = '', iconName] = props.name.split('/')
 
   if (!iconName) return { file: spriteManifest[defaultSprite] ?? defaultSprite, name: filename }
 
