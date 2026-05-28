@@ -1,6 +1,6 @@
 {
   "name": "nuxt-sprite-svg",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Optimized and Easy way to use SVG files in Nuxt",
   "repository": {
     "type": "git",
